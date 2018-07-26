@@ -38,33 +38,33 @@ def cnn_model_fn(features, labels, mode):
   # Reshape X to 4-D tensor: [batch_size, width, height, channels]
   # MNIST images are 28x28 pixels, and have one color channel
 
-  input_layer = tf.reshape(features["x"], [-1, LAYER_SHAPE_X, LAYER_SHAPE_Y, LAYER_SHAPE_Z])
+  input_layer = tf.reshape(features["x"], [-1, LAYER_SHAPE_X, LAYER_SHAPE_Y, LAYER_SHAPE_Z, 1])
   # Convolutional Layer #1
   # Computes 32 features using a 5x5 filter with ReLU activation.
   # Padding is added to preserve width and height.
   # Input Tensor Shape: [batch_size, 7, 7, 1]
   # Output Tensor Shape: [batch_size, 7, 7, 32]
-  conv1 = tf.layers.conv2d(
+  conv1 = tf.layers.conv3d(
       inputs=input_layer,
       filters=32,
-      kernel_size=[3, 3],
+      kernel_size=[3, 3, 1],
       padding="same",
       activation=tf.nn.relu)
   # Pooling Layer #1
   # First max pooling layer with a 2x2 filter and stride of 2
   # Input Tensor Shape: [batch_size, 28, 28, 32]
   # Output Tensor Shape: [batch_size, 14, 14, 32]
-  pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[3, 3], strides=2)
+  pool1 = tf.layers.max_pooling3d(inputs=conv1, pool_size=[3, 3, 1], strides=2)
   #print(pool1.shape)
   # Convolutional Layer #2
   # Computes 64 features using a 5x5 filter.
   # Padding is added to preserve width and height.
   # Input Tensor Shape: [batch_size, 7, 7, 32]
   # Output Tensor Shape: [batch_size, 7, 7, 64]
-  conv2 = tf.layers.conv2d(
+  conv2 = tf.layers.conv3d(
       inputs=pool1,
       filters=64,
-      kernel_size=[5, 5],
+      kernel_size=[5, 5, 1],
       padding="same",
       activation=tf.nn.relu)
 
@@ -72,7 +72,7 @@ def cnn_model_fn(features, labels, mode):
   # Second max pooling layer with a 2x2 filter and stride of 2
   # Input Tensor Shape: [batch_size, 14, 14, 64]
   # Output Tensor Shape: [batch_size, 7, 7, 64]
-  pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[3, 3], strides=2)
+  pool2 = tf.layers.max_pooling3d(inputs=conv2, pool_size=[3, 3, 1], strides=2)
   # Flatten tensor into a batch of vectors
   # Input Tensor Shape: [batch_size, 7, 7, 64]
   # Output Tensor Shape: [batch_size, 7 * 7 * 64]
