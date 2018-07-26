@@ -27,8 +27,8 @@ tf.logging.set_verbosity(tf.logging.INFO)
 data = reader.reader()  # Returns np.array
 CLASS_NUM = 2
 lenx, LAYER_SHAPE_X, LAYER_SHAPE_Y, LAYER_SHAPE_Z = data.shape
-TRAIN_DATA = data
-TRAIN_LABELS = reader.readLabel()  # Returns np.array
+PRED_DATA = data
+PRED_LABELS = reader.readLabel()  # Returns np.array
 #print(train_data.shape)
 
 
@@ -130,9 +130,9 @@ def cnn_model_fn(features, labels, mode):
 
 
 def main(unused_argv):
-  train_data = TRAIN_DATA
-  train_labels = TRAIN_LABELS
-  train_data=train_data.astype('float32')
+  pred_data = PRED_DATA
+  pred_labels = PRED_LABELS
+  pred_data = pred_data.astype('float32')
   #train_labels=train_labels.astype('float32')
   mnist_classifier = tf.estimator.Estimator(
       model_fn=cnn_model_fn, model_dir = './model')
@@ -142,33 +142,33 @@ def main(unused_argv):
       tensors=tensors_to_log, every_n_iter=50)
 
   # # Train the model
-  train_input_fn = tf.estimator.inputs.numpy_input_fn(
-      x={"x": train_data},
-      y=train_labels,
-      batch_size=lenx,
-      num_epochs=None,
-      shuffle=True)
-  mnist_classifier.train(
-      input_fn=train_input_fn,
-      steps=3,
-      hooks=[logging_hook])
-  print("Comming back")
+  # train_input_fn = tf.estimator.inputs.numpy_input_fn(
+  #     x={"x": train_data},
+  #     y=train_labels,
+  #     batch_size=lenx,
+  #     num_epochs=None,
+  #     shuffle=True)
+  # mnist_classifier.train(
+  #     input_fn=train_input_fn,
+  #     steps=20000,
+  #     hooks=[logging_hook])
+  # print("Comming back")
   # Evaluate the model and print results
 
-  # pred_input_fn = tf.estimator.inputs.numpy_input_fn(
-  #     x={"x": pred_data},
-  #     y=pred_labels,
-  #     num_epochs=1,
-  #     shuffle=False)
-  # pred_results = mnist_classifier.predict(input_fn=pred_input_fn)
-  # results = [result for result in pred_results]
-  # result_labels = [result['classes'] for result in results]
-  # result_probabilities = [result['probabilities'] for result in results]
-  # err = 0
-  # for i in range(len(result_labels)):
-  #   if result_labels[i] != pred_labels[i]:
-  #     err = err + 1
-  # print(1 - err / len(result_labels))
+  pred_input_fn = tf.estimator.inputs.numpy_input_fn(
+      x={"x": pred_data},
+      y=pred_labels,
+      num_epochs=1,
+      shuffle=False)
+  pred_results = mnist_classifier.predict(input_fn=pred_input_fn)
+  results = [result for result in pred_results]
+  result_labels = [result['classes'] for result in results]
+  result_probabilities = [result['probabilities'] for result in results]
+  err = 0
+  for i in range(len(result_labels)):
+    if result_labels[i] != pred_labels[i]:
+      err = err + 1
+  print(1 - err / len(result_labels))
 
 
 if __name__ == "__main__":
