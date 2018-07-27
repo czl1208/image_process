@@ -10,8 +10,9 @@ def reader():
 	arr = np.array(image_list)
 	return arr
 
-def readLabel():
+def readLabel(start, end):
 	file_object  = open("result.txt", "r")
 	labels = [int(line.replace('\n', '')) for line in file_object.readlines()]
-	arr = np.array(labels)[0:40]
+	arr = np.array(labels)[start:end]
 	return arr
+

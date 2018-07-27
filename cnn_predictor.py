@@ -28,7 +28,7 @@ data = reader.reader()  # Returns np.array
 CLASS_NUM = 2
 lenx, LAYER_SHAPE_X, LAYER_SHAPE_Y, LAYER_SHAPE_Z = data.shape
 PRED_DATA = data
-PRED_LABELS = reader.readLabel()  # Returns np.array
+PRED_LABELS = reader.readLabel(0, 40)  # Returns np.array
 #print(train_data.shape)
 
 
